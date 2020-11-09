@@ -1,0 +1,33 @@
+This parser can show the workload of a bcache device, which can be very useful
+when you want to understand the io pattern for a bcache deivice.
+
+eg, below html file is an example output that shows us how the result can look like:
+
+https://people.canonical.com/~taodd/252,32
+
+The x-axis means the time in seconds, y-axis represent the io number
+So each points means the total read or write io number in that specific second.
+Red point means read, blue point means write, so you are very easily to see the 
+write/read io number for each second and the distribution through different time.
+
+From this example you'll be able to see that 95+ percent of the io are read, so you
+will know where to look for to in order to improve the bcache performance
+
+
+Steps:
+1. sudo apt-get install trace-cmd
+
+2. sudo trace-cmd record -e bcache:bcache_request_start
+
+3. wait for 10 minutes
+
+4. sudo trace-cmd report > trace_bcache.output
+
+5. reformat the output to have each line only contains the real trace output like the example output
+
+6. ./parser.py <tracing output file> 
+
+After this, it will output a html file for each different bcache device, the device id is the filename
+
+TODO:
+Add some interactive functionality to show the avarage io size 
